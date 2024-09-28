@@ -12,12 +12,37 @@
         tools:layout="@layout/fragment_group_list">
         <action
             android:id="@+id/action_to_addGroupFragment"
-            app:destination="@id/addGroupFragment" />
+            app:destination="@id/addGroupFragment" >
+            <argument
+                android:name="groupId"
+                app:argType="string"
+                app:nullable="true"/>
+
+            <argument
+                android:name="groupName"
+                app:argType="string"
+                app:nullable="true"/>
+        </action>
     </fragment>
+
     <fragment
         android:id="@+id/addGroupFragment"
         android:name="com.trainerview.app.presentation.add_group.AddGroupFragment"
         android:label="fragment_add_group"
-        tools:layout="@layout/fragment_add_group" />
+        tools:layout="@layout/fragment_add_group" >
+
+        <argument
+            android:name="groupId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null"/>
+
+        <argument
+            android:name="groupName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null"/>
+
+    </fragment>
 
 </navigation>

@@ -20,6 +20,10 @@ class GroupRepositoryImpl @Inject constructor(
         groupDao.insertGroup(group)
     }
 
+    override suspend fun updateGroup(group: GroupDb) {
+        groupDao.updateGroup(group)
+    }
+
     override suspend fun deleteGroup(groupId: Long) {
         groupDao.deleteGroup(groupId)
     }

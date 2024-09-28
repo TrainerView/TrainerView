@@ -8,5 +8,7 @@ interface GroupRepository {
 
     suspend fun insertGroup(group: GroupDb)
 
+    suspend fun updateGroup(group: GroupDb)
+
     suspend fun deleteGroup(groupId: Long)
 }

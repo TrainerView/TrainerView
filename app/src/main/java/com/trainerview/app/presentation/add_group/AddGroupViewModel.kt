@@ -18,4 +18,11 @@ class AddGroupViewModel @Inject constructor(
             repository.insertGroup(group)
         }
     }
+
+    fun updateGroup(groupId: Long, name: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val group = GroupDb(id = groupId, name = name)
+            repository.updateGroup(group)
+        }
+    }
 }

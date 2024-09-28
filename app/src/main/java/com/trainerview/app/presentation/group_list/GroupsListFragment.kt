@@ -13,6 +13,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.trainerview.app.R
 import com.trainerview.app.app.AppComponentHolder
@@ -40,7 +41,7 @@ class GroupsListFragment : BaseFragment<FragmentGroupListBinding, GroupsListView
         super.onViewCreated(view, savedInstanceState)
         binding.fragmentGroupsListNewGroupBtn.setOnClickListener {
             viewModel.clearGroupSelection()
-            findNavController().navigate(R.id.action_to_addGroupFragment)
+            findNavController().navigate(GroupsListFragmentDirections.actionToAddGroupFragment(null, null))
         }
         binding.fragmentMainToolbar.applySystemInsetsTop()
         binding.fragmentGroupsGroupsRv.adapter = viewModel.adapter
@@ -54,7 +55,17 @@ class GroupsListFragment : BaseFragment<FragmentGroupListBinding, GroupsListView
         }
 
         binding.fragmentMainEditGroupButton.setOnClickListener {
-            viewModel.clearGroupSelection()
+            viewModel.uiState.value.groups.firstOrNull {
+                it.id == viewModel.uiState.value.selectedGroupId
+            }?.let { selectedGroup ->
+                viewModel.clearGroupSelection()
+                findNavController().navigate(
+                    GroupsListFragmentDirections.actionToAddGroupFragment(
+                        selectedGroup.id.toString(),
+                        selectedGroup.name
+                    )
+                )
+            }
         }
 
         viewModel.load()

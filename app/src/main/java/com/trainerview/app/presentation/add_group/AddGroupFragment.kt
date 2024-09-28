@@ -1,14 +1,17 @@
 package com.trainerview.app.presentation.add_group
 
 import android.os.Bundle
+import android.text.Editable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.appbar.MaterialToolbar
 import com.trainerview.app.R
 import com.trainerview.app.app.AppComponent
@@ -25,6 +28,8 @@ class AddGroupFragment : BaseFragment<FragmentAddGroupBinding, AddGroupViewModel
         .appComponent(AppComponentHolder.getComponent())
         .build()
 
+    private val args: AddGroupFragmentArgs by navArgs()
+
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -40,8 +45,14 @@ class AddGroupFragment : BaseFragment<FragmentAddGroupBinding, AddGroupViewModel
             applySystemInsetsTop()
         }
 
+        binding.fragmentAddGroupNameInput.setText(args.groupName.orEmpty(), TextView.BufferType.EDITABLE)
+
         binding.fragmentAddGroupSaveButton.setOnClickListener {
-            viewModel.createGroup(binding.fragmentAddGroupNameInput.text.toString())
+            when (val groupId = args.groupId) {
+                null -> viewModel.createGroup(binding.fragmentAddGroupNameInput.text.toString())
+                else -> viewModel.updateGroup(groupId.toLong(), binding.fragmentAddGroupNameInput.text.toString())
+            }
+
             findNavController().popBackStack()
         }
     }
