@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/fragment_main">
+
+    <fragment
+        android:id="@+id/fragment_main"
+        android:name="com.trainerview.app.presentation.group_list.GroupsListFragment"
+        android:label="Main"
+        tools:layout="@layout/fragment_group_list">
+        <action
+            android:id="@+id/action_to_addGroupFragment"
+            app:destination="@id/addGroupFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addGroupFragment"
+        android:name="com.trainerview.app.presentation.add_group.AddGroupFragment"
+        android:label="fragment_add_group"
+        tools:layout="@layout/fragment_add_group" />
+
+</navigation>
