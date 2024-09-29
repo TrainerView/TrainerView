@@ -13,7 +13,7 @@ interface GroupDao {
     suspend fun getAllGroups(): List<GroupDb>
 
     @Insert
-    suspend fun insertGroup(group: GroupDb)
+    suspend fun insertGroup(group: GroupDb): Long
 
     @Update
     suspend fun updateGroup(group: GroupDb)

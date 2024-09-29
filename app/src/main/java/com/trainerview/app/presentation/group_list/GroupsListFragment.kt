@@ -1,25 +1,21 @@
 package com.trainerview.app.presentation.group_list
 
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.appcompat.app.ActionBar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.trainerview.app.R
 import com.trainerview.app.app.AppComponentHolder
 import com.trainerview.app.base.BaseFragment
 import com.trainerview.app.databinding.FragmentGroupListBinding
 import com.trainerview.app.presentation.group_list.di.DaggerGroupsListComponent
+import com.trainerview.app.presentation.update_group.UpdateGroupType
 import kotlinx.coroutines.launch
 
 
@@ -41,7 +37,11 @@ class GroupsListFragment : BaseFragment<FragmentGroupListBinding, GroupsListView
         super.onViewCreated(view, savedInstanceState)
         binding.fragmentGroupsListNewGroupBtn.setOnClickListener {
             viewModel.clearGroupSelection()
-            findNavController().navigate(GroupsListFragmentDirections.actionToAddGroupFragment(null, null))
+            findNavController().navigate(
+                GroupsListFragmentDirections.actionToAddGroupFragment(
+                    UpdateGroupType.CreateGroup
+                )
+            )
         }
         binding.fragmentMainToolbar.applySystemInsetsTop()
         binding.fragmentGroupsGroupsRv.adapter = viewModel.adapter
@@ -61,8 +61,10 @@ class GroupsListFragment : BaseFragment<FragmentGroupListBinding, GroupsListView
                 viewModel.clearGroupSelection()
                 findNavController().navigate(
                     GroupsListFragmentDirections.actionToAddGroupFragment(
-                        selectedGroup.id.toString(),
-                        selectedGroup.name
+                        UpdateGroupType.EditGroup(
+                            groupId = selectedGroup.id,
+                            groupName = selectedGroup.name
+                        )
                     )
                 )
             }

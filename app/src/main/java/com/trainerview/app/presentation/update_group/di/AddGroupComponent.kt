@@ -1,4 +1,4 @@
-package com.trainerview.app.presentation.add_group.di
+package com.trainerview.app.presentation.update_group.di
 
 import androidx.lifecycle.ViewModel
 import com.trainerview.app.app.AppComponent
@@ -6,7 +6,9 @@ import com.trainerview.app.di.ScreenComponent
 import com.trainerview.app.di.ViewModelKey
 import com.trainerview.app.domain.GroupRepository
 import com.trainerview.app.domain.GroupRepositoryImpl
-import com.trainerview.app.presentation.add_group.AddGroupViewModel
+import com.trainerview.app.domain.ParticipantRepository
+import com.trainerview.app.domain.ParticipantRepositoryImpl
+import com.trainerview.app.presentation.update_group.UpdateGroupViewModel
 import dagger.Binds
 import dagger.Component
 import dagger.Module
@@ -29,10 +31,13 @@ interface AddGroupComponent : ScreenComponent {
 interface AddGroupModule {
 
     @IntoMap
-    @ViewModelKey(AddGroupViewModel::class)
+    @ViewModelKey(UpdateGroupViewModel::class)
     @Binds
-    fun bindVM(impl: AddGroupViewModel): ViewModel
+    fun bindVM(impl: UpdateGroupViewModel): ViewModel
 
     @Binds
-    fun bindRepository(impl: GroupRepositoryImpl): GroupRepository
+    fun bindGroupRepository(impl: GroupRepositoryImpl): GroupRepository
+
+    @Binds
+    fun bindParticipantRepository(impl: ParticipantRepositoryImpl): ParticipantRepository
 }

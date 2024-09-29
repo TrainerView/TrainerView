@@ -20,6 +20,7 @@ abstract class BaseFragment<T : ViewBinding, VM : BaseViewModel> : Fragment() {
 
     open val viewModelFactory: ViewModelProvider.Factory by lazy {
         with(diComponent()) {
+            argumentsHandler.arguments = arguments
             return@with viewModelFactory
         }
     }
