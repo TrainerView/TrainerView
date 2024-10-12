@@ -1,10 +1,9 @@
 package com.trainerview.app.presentation.group_list
 
-import androidx.lifecycle.viewModelScope
 import com.trainerview.app.base.BaseViewModel
 import com.trainerview.app.base.NavigateTo
 import com.trainerview.app.domain.GroupRepository
-import com.trainerview.app.presentation.update_group.UpdateGroupType
+import com.trainerview.app.presentation.update_group.UpdateGroupNavParams
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +15,9 @@ class GroupsListViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(GroupListScreenState())
+    private val selectedGroup: GroupListItem?
+        get() = _uiState.value.groups.firstOrNull { _uiState.value.selectedGroupId == it.id }
+
     val uiState: StateFlow<GroupListScreenState> = _uiState
 
     val adapter = GroupAdapter()
@@ -54,11 +56,22 @@ class GroupsListViewModel @Inject constructor(
         adapter.update(_uiState.value.groups)
     }
 
-    fun deleteSelectedGroup() {
+    fun onCreateGroupClick() {
+        clearGroupSelection()
+        postNavEvents(
+            NavigateTo(
+                GroupsListFragmentDirections.actionToAddGroupFragment(
+                    UpdateGroupNavParams.CreateGroup
+                )
+            )
+        )
+    }
+
+    fun onDeleteSelectedGroupClick() {
         safeLaunch {
-            _uiState.value.selectedGroupId?.let {
+            selectedGroup?.id?.let { selectedGroupId ->
                 val groupsDb = withContext(Dispatchers.IO) {
-                    repository.deleteGroup(it)
+                    repository.deleteGroup(selectedGroupId)
                     repository.getGroups()
                 }
                 _uiState.value = _uiState.value.copy(
@@ -70,10 +83,25 @@ class GroupsListViewModel @Inject constructor(
         }
     }
 
+    fun onEditSelectedGroupClick() {
+        selectedGroup?.let { selectedGroup ->
+            clearGroupSelection()
+            postNavEvents(
+                NavigateTo(
+                    GroupsListFragmentDirections.actionToAddGroupFragment(
+                        UpdateGroupNavParams.EditGroup(
+                            groupId = selectedGroup.id,
+                            groupName = selectedGroup.name
+                        )
+                    )
+                )
+            )
+        }
+    }
+
     fun load() {
         safeLaunch {
             val groupsDb = withContext(Dispatchers.IO) { repository.getGroups() }
-
             _uiState.value = _uiState.value.copy(
                 groups = groupsDb.map { GroupListItem(id = it.id, name = it.name) }
             )

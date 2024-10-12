@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Lifecycle
@@ -15,13 +14,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.trainerview.app.R
 import com.trainerview.app.app.AppComponentHolder
+import com.trainerview.app.base.Back
 import com.trainerview.app.base.BaseFragment
-import com.trainerview.app.data.db.model.ParticipantDb
 import com.trainerview.app.databinding.FragmentUpdateGroupBinding
-import com.trainerview.app.presentation.add_participant.AddParticipantFragment.Companion.ADD_PARTICIPANT_MODEL_KEY
-import com.trainerview.app.presentation.add_participant.AddParticipantFragment.Companion.ADD_PARTICIPANT_REQUEST_KEY
-import com.trainerview.app.presentation.add_participant.CreateParticipantModel
-import com.trainerview.app.presentation.add_participant.UpdateParticipantType
+import com.trainerview.app.presentation.update_participant.UpdateParticipantFragment.Companion.ADD_PARTICIPANT_MODEL_KEY
+import com.trainerview.app.presentation.update_participant.UpdateParticipantFragment.Companion.ADD_PARTICIPANT_REQUEST_KEY
+import com.trainerview.app.presentation.update_participant.UpdateParticipantModel
+import com.trainerview.app.presentation.update_participant.UpdateParticipantNavParams
 import com.trainerview.app.presentation.update_group.di.DaggerAddGroupComponent
 import kotlinx.coroutines.launch
 
@@ -44,9 +43,9 @@ class UpdateGroupFragment : BaseFragment<FragmentUpdateGroupBinding, UpdateGroup
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        when (val updateMode = args.updateMode) {
-            UpdateGroupType.CreateGroup -> Unit
-            is UpdateGroupType.EditGroup -> {
+        when (val updateMode = args.updateParams) {
+            UpdateGroupNavParams.CreateGroup -> Unit
+            is UpdateGroupNavParams.EditGroup -> {
                 viewModel.load(updateMode.groupId)
             }
         }
@@ -54,64 +53,8 @@ class UpdateGroupFragment : BaseFragment<FragmentUpdateGroupBinding, UpdateGroup
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        with(binding.toolbar) {
-            setNavigationOnClickListener {
-                when (viewModel.uiState.value.selectedParticipantId) {
-                    null -> findNavController().popBackStack()
-                    else -> viewModel.clearParticipantSelection()
-                }
-            }
-            applySystemInsetsTop()
-        }
-        binding.participantRv.adapter = viewModel.adapter
-        binding.addParticipantButton.setOnClickListener {
-            findNavController().navigate(
-                UpdateGroupFragmentDirections.actionToAddParticipantFragment(
-                    UpdateParticipantType.CreateParticipant
-                )
-            )
-        }
-        binding.deleteButton.setOnClickListener {
-            viewModel.onDeleteButtonClick()
-        }
-
-        binding.editButton.setOnClickListener {
-            with(viewModel.uiState.value) {
-                participants.firstOrNull { selectedParticipantId == it.id }?.let {
-                    viewModel.clearParticipantSelection()
-                    findNavController().navigate(
-                        UpdateGroupFragmentDirections.actionToAddParticipantFragment(
-                            UpdateParticipantType.EditParticipant(
-                                participantId = it.id,
-                                participantName = it.name
-                            )
-                        )
-                    )
-                }
-            }
-        }
-
-        when (val updateMode = args.updateMode) {
-            UpdateGroupType.CreateGroup -> {
-                binding.saveButton.setOnClickListener {
-                    viewModel.createGroup(binding.nameInput.text.toString())
-                    findNavController().popBackStack()
-                }
-            }
-            is UpdateGroupType.EditGroup -> {
-                binding.nameInput.setText(updateMode.groupName, TextView.BufferType.EDITABLE)
-                binding.saveButton.setOnClickListener {
-                    viewModel.updateGroup(updateMode.groupId, binding.nameInput.text.toString())
-                    findNavController().popBackStack()
-                }
-            }
-        }
-
-        setFragmentResultListener(ADD_PARTICIPANT_REQUEST_KEY) { key, bundle ->
-            bundle.getParcelable<CreateParticipantModel>(ADD_PARTICIPANT_MODEL_KEY)?.let(::onCreateParticipant)
-        }
-
+        initUI()
+        subscribeFragmentResult()
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
@@ -121,8 +64,38 @@ class UpdateGroupFragment : BaseFragment<FragmentUpdateGroupBinding, UpdateGroup
         }
     }
 
-    private fun onCreateParticipant(participant: CreateParticipantModel) {
-        viewModel.addParticipant(participant)
+    private fun subscribeFragmentResult() {
+        setFragmentResultListener(ADD_PARTICIPANT_REQUEST_KEY) { key, bundle ->
+            bundle.getParcelable<UpdateParticipantModel>(ADD_PARTICIPANT_MODEL_KEY)?.let {
+                viewModel.addParticipant(it)
+            }
+        }
+    }
+
+    private fun initUI() {
+        with(binding) {
+            toolbar.setNavigationOnClickListener { viewModel.onToolbarNavIconClick() }
+            toolbar.applySystemInsetsTop()
+            participantRv.adapter = viewModel.adapter
+            addParticipantButton.setOnClickListener {
+                findNavController().navigate(
+                    UpdateGroupFragmentDirections.actionToAddParticipantFragment(
+                        UpdateParticipantNavParams.CreateParticipant
+                    )
+                )
+            }
+            deleteButton.setOnClickListener { viewModel.onDeleteButtonClick() }
+            editButton.setOnClickListener { viewModel.onEditSelectedParticipantClick() }
+            saveButton.setOnClickListener { viewModel.onSaveButtonClick(binding.nameInput.text.toString()) }
+
+            when (val params = args.updateParams) {
+                UpdateGroupNavParams.CreateGroup -> Unit
+                is UpdateGroupNavParams.EditGroup -> {
+                    nameInput.setText(params.groupName, TextView.BufferType.EDITABLE)
+                }
+            }
+
+        }
     }
 
     private fun updateToolbar(state: AddGroupScreenState) {

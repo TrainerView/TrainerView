@@ -7,7 +7,7 @@
     android:background="#F5F4F6">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/fragment_add_participant_toolbar"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/fragment_add_participant_save_button"
+            android:id="@+id/save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_check"
@@ -26,12 +26,12 @@
     </com.google.android.material.appbar.MaterialToolbar>
 
     <FrameLayout
-        android:id="@+id/fragment_add_participant_avatar_cell"
+        android:id="@+id/avatar_cell"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
         android:layout_marginTop="1dp"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_add_participant_toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <ImageView
             android:layout_width="130dp"
@@ -48,6 +48,6 @@
         android:background="#FFFFFF"
         android:hint="Имя участника"
         android:padding="10dp"
-        app:layout_constraintTop_toBottomOf="@id/fragment_add_participant_avatar_cell"/>
+        app:layout_constraintTop_toBottomOf="@id/avatar_cell"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

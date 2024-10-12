@@ -27,24 +27,24 @@
         tools:layout="@layout/fragment_update_group" >
 
         <argument
-            android:name="updateMode"
-            app:argType="com.trainerview.app.presentation.update_group.UpdateGroupType"/>
+            android:name="updateParams"
+            app:argType="com.trainerview.app.presentation.update_group.UpdateGroupNavParams"/>
 
         <action
             android:id="@+id/action_to_addParticipantFragment"
-            app:destination="@id/addParticipantFragment" />
+            app:destination="@id/updateParticipantFragment" />
 
     </fragment>
 
     <fragment
-        android:id="@+id/addParticipantFragment"
-        android:label="fragment_add_participant"
-        android:name="com.trainerview.app.presentation.add_participant.AddParticipantFragment"
-        tools:layout="@layout/fragment_add_participant">
+        android:id="@+id/updateParticipantFragment"
+        android:label="fragment_update_participant"
+        android:name="com.trainerview.app.presentation.update_participant.UpdateParticipantFragment"
+        tools:layout="@layout/fragment_update_participant">
 
         <argument
-            android:name="updateMode"
-            app:argType="com.trainerview.app.presentation.add_participant.UpdateParticipantType"/>
+            android:name="updateParams"
+            app:argType="com.trainerview.app.presentation.update_participant.UpdateParticipantNavParams"/>
 
     </fragment>
 

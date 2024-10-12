@@ -54,7 +54,7 @@ class GroupDetailsViewModel @Inject constructor(
         }
     }
 
-    fun showCreateTrainingScreen() {
+    fun onCreateTrainingClick() {
         safeLaunch {
             val participants = withContext(Dispatchers.IO) {
                 participantRepository.getParticipants(args.groupId)

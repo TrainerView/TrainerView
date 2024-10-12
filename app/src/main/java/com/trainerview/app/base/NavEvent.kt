@@ -19,6 +19,12 @@ class NavigateTo(
     }
 }
 
+object Back: NavEvent {
+    override fun navigate(fragment: Fragment) {
+        fragment.findNavController().popBackStack()
+    }
+}
+
 class BackWithResult(
     private val requestKey: String,
     private val result: Bundle

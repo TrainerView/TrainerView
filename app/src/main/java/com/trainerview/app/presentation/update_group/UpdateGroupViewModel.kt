@@ -1,13 +1,15 @@
 package com.trainerview.app.presentation.update_group
 
 import androidx.lifecycle.viewModelScope
+import com.trainerview.app.base.Back
 import com.trainerview.app.base.BaseViewModel
+import com.trainerview.app.base.NavigateTo
 import com.trainerview.app.data.db.model.GroupDb
 import com.trainerview.app.data.db.model.ParticipantDb
 import com.trainerview.app.domain.GroupRepository
 import com.trainerview.app.domain.ParticipantRepository
-import com.trainerview.app.presentation.add_participant.CreateParticipantModel
-import com.trainerview.app.presentation.group_list.GroupListItem
+import com.trainerview.app.presentation.update_participant.UpdateParticipantModel
+import com.trainerview.app.presentation.update_participant.UpdateParticipantNavParams
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,6 +26,13 @@ class UpdateGroupViewModel @Inject constructor(
     private val args by navArgs<UpdateGroupFragmentArgs>()
 
     private val _uiState = MutableStateFlow(AddGroupScreenState())
+    private val selectedParticipant: ParticipantListItem?
+        get() = with(_uiState.value) {
+            participants.firstOrNull { it.id == selectedParticipantId }
+        }
+    private val isParticipantSelected: Boolean
+        get() = selectedParticipant != null
+
     val uiState: StateFlow<AddGroupScreenState> = _uiState
 
     val adapter = ParticipantAdapter()
@@ -86,7 +95,7 @@ class UpdateGroupViewModel @Inject constructor(
         }
     }
 
-    fun addParticipant(participantModel: CreateParticipantModel) {
+    fun addParticipant(participantModel: UpdateParticipantModel) {
         val participantsCopy = when (participantModel.id) {
             null -> uiState.value.participants.toMutableList().apply {
                 add(
@@ -122,6 +131,42 @@ class UpdateGroupViewModel @Inject constructor(
             }
         }
         clearParticipantSelection()
+    }
+
+    fun onToolbarNavIconClick() {
+        when (isParticipantSelected) {
+            true -> clearParticipantSelection()
+            false -> postNavEvents(Back)
+        }
+    }
+
+    fun onEditSelectedParticipantClick() {
+        selectedParticipant?.let { selectedParticipant ->
+            clearParticipantSelection()
+            postNavEvents(
+                NavigateTo(
+                    UpdateGroupFragmentDirections.actionToAddParticipantFragment(
+                        UpdateParticipantNavParams.UpdateParticipant(
+                            participantId = selectedParticipant.id,
+                            participantName = selectedParticipant.name
+                        )
+                    )
+                )
+            )
+        }
+    }
+
+    fun onSaveButtonClick(name: String) {
+        when (val params = args.updateParams) {
+            UpdateGroupNavParams.CreateGroup -> {
+                createGroup(name)
+                postNavEvents(Back)
+            }
+            is UpdateGroupNavParams.EditGroup -> {
+                updateGroup(params.groupId, name)
+                postNavEvents(Back)
+            }
+        }
     }
 
     fun clearParticipantSelection() {

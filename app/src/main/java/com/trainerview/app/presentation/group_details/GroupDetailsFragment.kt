@@ -1,16 +1,10 @@
 package com.trainerview.app.presentation.group_details
 
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.setFragmentResultListener
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import com.trainerview.app.app.AppComponentHolder
 import com.trainerview.app.base.BaseFragment
@@ -18,8 +12,6 @@ import com.trainerview.app.databinding.FragmentGroupDetailsBinding
 import com.trainerview.app.presentation.group_details.di.DaggerGroupDetailsComponent
 import com.trainerview.app.presentation.update_training.ParticipantItem
 import com.trainerview.app.presentation.update_training.UpdateTrainingFragment
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.Date
 
 class GroupDetailsFragment : BaseFragment<FragmentGroupDetailsBinding, GroupDetailsViewModel>() {
@@ -38,20 +30,16 @@ class GroupDetailsFragment : BaseFragment<FragmentGroupDetailsBinding, GroupDeta
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initUi()
+        subscribeFragmentResult()
+    }
 
-        with(binding.toolbar) {
-            applySystemInsetsTop()
-            setNavigationOnClickListener {
-                findNavController().popBackStack()
-            }
-        }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.load()
+    }
 
-        binding.newTrainingBtn.setOnClickListener {
-            viewModel.showCreateTrainingScreen()
-        }
-
-        binding.detailsRv.adapter = viewModel.adapter
-
+    private fun subscribeFragmentResult() {
         setFragmentResultListener(UpdateTrainingFragment.CREATE_TRAINING_REQUEST_KEY) { key, bundle ->
             val cameParticipants =  bundle.getParcelableArrayList<ParticipantItem>(UpdateTrainingFragment.VISITED_PARTICIPANTS_MODEL_KEY)
             val missedParticipants =  bundle.getParcelableArrayList<ParticipantItem>(UpdateTrainingFragment.MISSED_PARTICIPANTS_MODEL_KEY)
@@ -77,9 +65,13 @@ class GroupDetailsFragment : BaseFragment<FragmentGroupDetailsBinding, GroupDeta
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.load()
+    private fun initUi() {
+        with(binding) {
+            toolbar.applySystemInsetsTop()
+            toolbar.setNavigationOnClickListener { findNavController().popBackStack() }
+            detailsRv.adapter = viewModel.adapter
+            createTrainingBtn.setOnClickListener { viewModel.onCreateTrainingClick() }
+        }
     }
 }
 

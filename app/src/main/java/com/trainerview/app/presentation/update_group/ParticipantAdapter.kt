@@ -20,7 +20,11 @@ class ParticipantAdapter : RecyclerView.Adapter<ParticipantViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ParticipantViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = LiParticipantBinding.inflate(inflater, parent, false)
-        return ParticipantViewHolder(binding)
+        return ParticipantViewHolder(
+            binding = binding,
+            onItemClickListener = onItemClickListener,
+            onItemLongClickListener = onItemLongClickListener
+        )
     }
 
     override fun getItemCount(): Int {
@@ -28,11 +32,7 @@ class ParticipantAdapter : RecyclerView.Adapter<ParticipantViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ParticipantViewHolder, position: Int) {
-        holder.bind(
-            item = items[position],
-            onItemClickListener = onItemClickListener,
-            onItemLongClickListener = onItemLongClickListener
-        )
+        holder.bind(items[position],)
     }
 
     fun update(newGroups: List<ParticipantListItem>) {
@@ -44,13 +44,11 @@ class ParticipantAdapter : RecyclerView.Adapter<ParticipantViewHolder>() {
 
 class ParticipantViewHolder(
     private val binding: LiParticipantBinding,
+    private val onItemClickListener: ClickAction?,
+    private val onItemLongClickListener: ClickAction?
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(
-        item: ParticipantListItem,
-        onItemClickListener: ClickAction?,
-        onItemLongClickListener: ClickAction?
-    ) {
+    fun bind(item: ParticipantListItem) {
         binding.title.text = item.name
         binding.root.setOnLongClickListener {
             onItemLongClickListener?.invoke(item)
