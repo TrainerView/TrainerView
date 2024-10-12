@@ -39,18 +39,18 @@ class GroupDetailsFragment : BaseFragment<FragmentGroupDetailsBinding, GroupDeta
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding.fragmentGroupDetailsToolbar) {
+        with(binding.toolbar) {
             applySystemInsetsTop()
             setNavigationOnClickListener {
                 findNavController().popBackStack()
             }
         }
 
-        binding.fragmentGroupDetailsNewTrainingBtn.setOnClickListener {
+        binding.newTrainingBtn.setOnClickListener {
             viewModel.showCreateTrainingScreen()
         }
 
-        binding.fragmentGroupDetailsRv.adapter = viewModel.adapter
+        binding.detailsRv.adapter = viewModel.adapter
 
         setFragmentResultListener(UpdateTrainingFragment.CREATE_TRAINING_REQUEST_KEY) { key, bundle ->
             val cameParticipants =  bundle.getParcelableArrayList<ParticipantItem>(UpdateTrainingFragment.VISITED_PARTICIPANTS_MODEL_KEY)

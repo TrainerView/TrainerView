@@ -55,7 +55,7 @@ class UpdateGroupFragment : BaseFragment<FragmentUpdateGroupBinding, UpdateGroup
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding.fragmentAddGroupToolbar) {
+        with(binding.toolbar) {
             setNavigationOnClickListener {
                 when (viewModel.uiState.value.selectedParticipantId) {
                     null -> findNavController().popBackStack()
@@ -64,19 +64,19 @@ class UpdateGroupFragment : BaseFragment<FragmentUpdateGroupBinding, UpdateGroup
             }
             applySystemInsetsTop()
         }
-        binding.fragmentAddGroupParticipantRv.adapter = viewModel.adapter
-        binding.fragmentAddGroupAddParticipant.setOnClickListener {
+        binding.participantRv.adapter = viewModel.adapter
+        binding.addParticipantButton.setOnClickListener {
             findNavController().navigate(
                 UpdateGroupFragmentDirections.actionToAddParticipantFragment(
                     UpdateParticipantType.CreateParticipant
                 )
             )
         }
-        binding.fragmentUpdateGroupDeleteButton.setOnClickListener {
+        binding.deleteButton.setOnClickListener {
             viewModel.onDeleteButtonClick()
         }
 
-        binding.fragmentUpdateGroupEditButton.setOnClickListener {
+        binding.editButton.setOnClickListener {
             with(viewModel.uiState.value) {
                 participants.firstOrNull { selectedParticipantId == it.id }?.let {
                     viewModel.clearParticipantSelection()
@@ -94,15 +94,15 @@ class UpdateGroupFragment : BaseFragment<FragmentUpdateGroupBinding, UpdateGroup
 
         when (val updateMode = args.updateMode) {
             UpdateGroupType.CreateGroup -> {
-                binding.fragmentUpdateGroupSaveButton.setOnClickListener {
-                    viewModel.createGroup(binding.fragmentAddGroupNameInput.text.toString())
+                binding.saveButton.setOnClickListener {
+                    viewModel.createGroup(binding.nameInput.text.toString())
                     findNavController().popBackStack()
                 }
             }
             is UpdateGroupType.EditGroup -> {
-                binding.fragmentAddGroupNameInput.setText(updateMode.groupName, TextView.BufferType.EDITABLE)
-                binding.fragmentUpdateGroupSaveButton.setOnClickListener {
-                    viewModel.updateGroup(updateMode.groupId, binding.fragmentAddGroupNameInput.text.toString())
+                binding.nameInput.setText(updateMode.groupName, TextView.BufferType.EDITABLE)
+                binding.saveButton.setOnClickListener {
+                    viewModel.updateGroup(updateMode.groupId, binding.nameInput.text.toString())
                     findNavController().popBackStack()
                 }
             }
@@ -128,16 +128,16 @@ class UpdateGroupFragment : BaseFragment<FragmentUpdateGroupBinding, UpdateGroup
     private fun updateToolbar(state: AddGroupScreenState) {
         when (state.selectedParticipantId) {
             null -> {
-                binding.fragmentAddGroupToolbar.setNavigationIcon(R.drawable.ic_back)
-                binding.fragmentUpdateGroupSaveButton.isVisible = true
-                binding.fragmentUpdateGroupEditButton.isVisible = false
-                binding.fragmentUpdateGroupDeleteButton.isVisible = false
+                binding.toolbar.setNavigationIcon(R.drawable.ic_back)
+                binding.saveButton.isVisible = true
+                binding.editButton.isVisible = false
+                binding.deleteButton.isVisible = false
             }
             else -> {
-                binding.fragmentAddGroupToolbar.setNavigationIcon(R.drawable.ic_close)
-                binding.fragmentUpdateGroupSaveButton.isVisible = false
-                binding.fragmentUpdateGroupEditButton.isVisible = true
-                binding.fragmentUpdateGroupDeleteButton.isVisible = true
+                binding.toolbar.setNavigationIcon(R.drawable.ic_close)
+                binding.saveButton.isVisible = false
+                binding.editButton.isVisible = true
+                binding.deleteButton.isVisible = true
             }
         }
     }

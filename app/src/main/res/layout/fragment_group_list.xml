@@ -7,7 +7,7 @@
     android:background="#F5F4F6">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/fragment_main_toolbar"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" >
 
         <ImageView
-            android:id="@+id/fragment_main_delete_group_button"
+            android:id="@+id/delete_group_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_delete"
@@ -25,7 +25,7 @@
             android:layout_marginEnd="20dp" />
 
         <ImageView
-            android:id="@+id/fragment_main_edit_group_button"
+            android:id="@+id/edit_group_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_edit"
@@ -35,7 +35,7 @@
     </com.google.android.material.appbar.MaterialToolbar>
 
     <TextView
-        android:id="@+id/fragment_groups_list_label"
+        android:id="@+id/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
@@ -43,10 +43,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_main_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragment_groups_groups_rv"
+        android:id="@+id/groups_rv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -54,10 +54,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_main_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fragment_groups_list_new_group_btn"
+        android:id="@+id/new_group_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="24dp"

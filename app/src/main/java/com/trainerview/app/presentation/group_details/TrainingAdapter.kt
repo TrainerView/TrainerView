@@ -44,7 +44,7 @@ class TrainingViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(training: TrainingListItem) {
-        binding.liTrainingDate.text = training.date
+        binding.date.text = training.date
         binding.root.setOnClickListener {
             onItemClickListener?.invoke(training)
         }

@@ -55,7 +55,7 @@ class AddParticipantFragment : BaseFragment<FragmentAddParticipantBinding, AddPa
                 binding.fragmentAddParticipantSaveButton.setOnClickListener {
                     val participant = CreateParticipantModel(
                         id = null,
-                        name = binding.fragmentAddGroupNameInput.text.toString()
+                        name = binding.nameInput.text.toString()
                     )
                     setFragmentResult(
                         ADD_PARTICIPANT_REQUEST_KEY,
@@ -65,11 +65,11 @@ class AddParticipantFragment : BaseFragment<FragmentAddParticipantBinding, AddPa
                 }
             }
             is UpdateParticipantType.EditParticipant -> {
-                binding.fragmentAddGroupNameInput.setText(updateMode.participantName, TextView.BufferType.EDITABLE)
+                binding.nameInput.setText(updateMode.participantName, TextView.BufferType.EDITABLE)
                 binding.fragmentAddParticipantSaveButton.setOnClickListener {
                     val participant = CreateParticipantModel(
                         id = updateMode.participantId,
-                        name = binding.fragmentAddGroupNameInput.text.toString()
+                        name = binding.nameInput.text.toString()
                     )
                     setFragmentResult(
                         ADD_PARTICIPANT_REQUEST_KEY,

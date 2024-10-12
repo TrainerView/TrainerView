@@ -35,7 +35,7 @@ class GroupsListFragment : BaseFragment<FragmentGroupListBinding, GroupsListView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.fragmentGroupsListNewGroupBtn.setOnClickListener {
+        binding.newGroupBtn.setOnClickListener {
             viewModel.clearGroupSelection()
             findNavController().navigate(
                 GroupsListFragmentDirections.actionToAddGroupFragment(
@@ -43,18 +43,19 @@ class GroupsListFragment : BaseFragment<FragmentGroupListBinding, GroupsListView
                 )
             )
         }
-        binding.fragmentMainToolbar.applySystemInsetsTop()
-        binding.fragmentGroupsGroupsRv.adapter = viewModel.adapter
+        binding.toolbar.applySystemInsetsTop()
+        binding.groupsRv.adapter = viewModel.adapter
 
-        binding.fragmentMainToolbar.setNavigationOnClickListener {
+        binding.toolbar.setNavigationOnClickListener {
             viewModel.clearGroupSelection()
         }
 
-        binding.fragmentMainDeleteGroupButton.setOnClickListener {
+
+        binding.deleteGroupButton.setOnClickListener {
             viewModel.deleteSelectedGroup()
         }
 
-        binding.fragmentMainEditGroupButton.setOnClickListener {
+        binding.editGroupButton.setOnClickListener {
             viewModel.uiState.value.groups.firstOrNull {
                 it.id == viewModel.uiState.value.selectedGroupId
             }?.let { selectedGroup ->
@@ -84,14 +85,14 @@ class GroupsListFragment : BaseFragment<FragmentGroupListBinding, GroupsListView
     private fun updateToolbar(showButtons: Boolean) {
         when (showButtons) {
             true -> {
-                binding.fragmentMainToolbar.setNavigationIconTint(ContextCompat.getColor(binding.root.context, R.color.black))
-                binding.fragmentMainDeleteGroupButton.isVisible = true
-                binding.fragmentMainEditGroupButton.isVisible = true
+                binding.toolbar.setNavigationIconTint(ContextCompat.getColor(binding.root.context, R.color.black))
+                binding.deleteGroupButton.isVisible = true
+                binding.editGroupButton.isVisible = true
             }
             false -> {
-                binding.fragmentMainToolbar.setNavigationIconTint(ContextCompat.getColor(binding.root.context, R.color.white))
-                binding.fragmentMainDeleteGroupButton.isVisible = false
-                binding.fragmentMainEditGroupButton.isVisible = false
+                binding.toolbar.setNavigationIconTint(ContextCompat.getColor(binding.root.context, R.color.white))
+                binding.deleteGroupButton.isVisible = false
+                binding.editGroupButton.isVisible = false
             }
         }
     }

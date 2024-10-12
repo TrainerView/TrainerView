@@ -51,7 +51,7 @@ class ParticipantViewHolder(
         onItemClickListener: ClickAction?,
         onItemLongClickListener: ClickAction?
     ) {
-        binding.liParticipantTitle.text = item.name
+        binding.title.text = item.name
         binding.root.setOnLongClickListener {
             onItemLongClickListener?.invoke(item)
             true

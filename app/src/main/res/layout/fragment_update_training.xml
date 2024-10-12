@@ -8,7 +8,7 @@
     android:background="#F5F4F6">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/fragment_update_training_toolbar"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
@@ -16,7 +16,7 @@
         app:navigationIcon="@drawable/ic_back">
 
         <ImageView
-            android:id="@+id/fragment_update_training_save_button"
+            android:id="@+id/save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_check"
@@ -26,7 +26,7 @@
     </com.google.android.material.appbar.MaterialToolbar>
 
     <FrameLayout
-        android:id="@+id/fragment_update_training_date_pick_btn"
+        android:id="@+id/date_pick_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
@@ -37,7 +37,7 @@
         android:foreground="?android:attr/selectableItemBackground">
 
         <TextView
-            android:id="@+id/fragment_update_training_date_pick_label"
+            android:id="@+id/date_pick_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center"/>
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragment_update_training_missed_rv"
+        android:id="@+id/missed_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
@@ -73,7 +73,7 @@
         android:layout_marginTop="1dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragment_update_training_came_rv"
+        android:id="@+id/came_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />

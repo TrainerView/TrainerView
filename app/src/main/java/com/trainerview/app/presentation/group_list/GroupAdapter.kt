@@ -51,7 +51,7 @@ class GroupViewHolder(
         onItemClickListener: (GroupListItem) -> Unit,
         onItemLongClickListener: (GroupListItem) -> Unit
     ) {
-        binding.liGroupTitle.text = group.name
+        binding.title.text = group.name
         binding.root.setOnLongClickListener {
             onItemLongClickListener.invoke(group)
             true

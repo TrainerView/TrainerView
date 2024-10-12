@@ -63,24 +63,24 @@ class UpdateTrainingFragment : BaseFragment<FragmentUpdateTrainingBinding, Updat
 
     private fun initUI() {
         with(binding) {
-            fragmentUpdateTrainingToolbar.applySystemInsetsTop()
-            fragmentUpdateTrainingToolbar.setNavigationOnClickListener {
+            toolbar.applySystemInsetsTop()
+            toolbar.setNavigationOnClickListener {
                 findNavController().popBackStack()
             }
-            fragmentUpdateTrainingMissedRv.adapter = viewModel.missedParticipantsAdapter
-            fragmentUpdateTrainingCameRv.adapter = viewModel.cameParticipantsAdapter
-            fragmentUpdateTrainingSaveButton.setOnClickListener {
+            missedRv.adapter = viewModel.missedParticipantsAdapter
+            cameRv.adapter = viewModel.cameParticipantsAdapter
+            saveButton.setOnClickListener {
                 viewModel.onSaveButtonClick()
             }
 
-            fragmentUpdateTrainingDatePickBtn.setOnClickListener {
+            datePickBtn.setOnClickListener {
                 showDatePicker()
             }
         }
     }
 
     private fun onDateChanged(date: Date) {
-        binding.fragmentUpdateTrainingDatePickLabel.text = DateFormatter.formatString(date)
+        binding.datePickLabel.text = DateFormatter.formatString(date)
     }
 
     private fun showDatePicker() {
@@ -100,7 +100,6 @@ class UpdateTrainingFragment : BaseFragment<FragmentUpdateTrainingBinding, Updat
                 }.time
 
                 viewModel.onDateSelected(selectedDate)
-                binding.fragmentUpdateTrainingDatePickLabel.text = DateFormatter.formatString(selectedDate)
             }
             show()
         }

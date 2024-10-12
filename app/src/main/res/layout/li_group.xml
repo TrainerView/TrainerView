@@ -9,7 +9,7 @@
     android:background="@color/white">
 
     <ImageView
-        android:id="@+id/li_group_account_avatar"
+        android:id="@+id/avatar"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/ic_account_circle"
@@ -18,13 +18,13 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
-        android:id="@+id/li_group_title"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="adawdawda"
         android:layout_marginStart="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/li_group_account_avatar"
+        app:layout_constraintStart_toEndOf="@id/avatar"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
