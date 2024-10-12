@@ -1,11 +1,20 @@
 package com.trainerview.app.presentation.update_training
 
-import androidx.lifecycle.viewModelScope
+import androidx.core.os.bundleOf
+import com.trainerview.app.base.BackWithResult
 import com.trainerview.app.base.BaseViewModel
 import com.trainerview.app.domain.TrainingRepository
-import com.trainerview.app.presentation.group_list.GroupListScreenState
 import com.trainerview.app.presentation.update_group.ParticipantAdapter
 import com.trainerview.app.presentation.update_group.ParticipantListItem
+import com.trainerview.app.presentation.update_training.UpdateTrainingFragment.Companion.CREATE_TRAINING_REQUEST_KEY
+import com.trainerview.app.presentation.update_training.UpdateTrainingFragment.Companion.DATE_MODEL_KEY
+import com.trainerview.app.presentation.update_training.UpdateTrainingFragment.Companion.MISSED_PARTICIPANTS_MODEL_KEY
+import com.trainerview.app.presentation.update_training.UpdateTrainingFragment.Companion.TRAINING_ID_KEY
+import com.trainerview.app.presentation.update_training.UpdateTrainingFragment.Companion.UPDATE_TRAINING_REQUEST_KEY
+import com.trainerview.app.presentation.update_training.UpdateTrainingFragment.Companion.VISITED_PARTICIPANTS_MODEL_KEY
+import com.trainerview.app.presentation.update_training.UpdateTrainingNavParams.UpdateTraining
+import com.trainerview.app.presentation.update_training.UpdateTrainingNavParams.CreateTraining
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,6 +29,13 @@ class UpdateTrainingViewModel @Inject constructor(
 
     private val args by navArgs<UpdateTrainingFragmentArgs>()
     private val _uiState = MutableStateFlow(UpdateTrainingScreenState(Calendar.getInstance().time))
+    private val cameParticipants: List<ParticipantItem>
+        get() = _uiState.value.cameParticipants
+    private val missedParticipants: List<ParticipantItem>
+        get() = _uiState.value.missedParticipants
+    private val selectedDate: Date
+        get() = _uiState.value.selectedDate
+
     val uiState: StateFlow<UpdateTrainingScreenState> = _uiState
 
 
@@ -28,78 +44,85 @@ class UpdateTrainingViewModel @Inject constructor(
 
     init {
         cameParticipantsAdapter.onItemClickListener = { clickedParticipant ->
-            val cameParticipants = _uiState.value.cameParticipants.filter {
-                clickedParticipant.id != it.id
-            }
-            val missedParticipants = _uiState.value.missedParticipants.toMutableList().apply {
-                val newItem = ParticipantItem(
-                    id = clickedParticipant.id,
-                    name = clickedParticipant.name
-                )
-                add(0, newItem)
-            }
-            _uiState.value = _uiState.value.copy(
-                cameParticipants = cameParticipants,
-                missedParticipants = missedParticipants
-            )
-            updateUi()
+            moveParticipantFromCameToMissed(clickedParticipant.id)
+            updateAdapters()
         }
         missedParticipantsAdapter.onItemClickListener = { clickedParticipant ->
-            val cameParticipants = _uiState.value.cameParticipants.toMutableList().apply {
-                val newItem = ParticipantItem(
-                    id = clickedParticipant.id,
-                    name = clickedParticipant.name
-                )
-                add(0, newItem)
-            }
-            val missedParticipants = _uiState.value.missedParticipants.filter {
-                clickedParticipant.id != it.id
-            }
-            _uiState.value = _uiState.value.copy(
-                cameParticipants = cameParticipants,
-                missedParticipants = missedParticipants
-            )
-            updateUi()
+            moveParticipantFromMissedToCame(clickedParticipant.id)
+            updateAdapters()
         }
     }
 
     fun loadData() {
         when (val params = args.updateParams) {
-            is UpdateTrainingNavParams.CreateTraining -> {
-                _uiState.value = _uiState.value.copy(
-                    cameParticipants = emptyList(),
-                    missedParticipants = params.participants
-                )
-                updateUi()
-            }
-            is UpdateTrainingNavParams.UpdateTraining -> {
-                safeLaunch {
-                    val visits = withContext(Dispatchers.IO) { trainingRepository.getTrainingVisits(params.trainingId) }
-
-                    val missedParticipants = mutableListOf<ParticipantItem>()
-                    val visitedParticipants = mutableListOf<ParticipantItem>()
-                    visits.forEach {
-                        val participantItem = ParticipantItem(
-                            id = it.participant.id,
-                            name = it.participant.name
-                        )
-                        when (it.isVisited) {
-                            true -> visitedParticipants.add(participantItem)
-                            false -> missedParticipants.add(participantItem)
-                        }
-                    }
-                    _uiState.value = _uiState.value.copy(
-                        cameParticipants = visitedParticipants,
-                        missedParticipants = missedParticipants,
-                        selectedDate = params.date
-                    )
-                    updateUi()
-                }
-            }
+            is CreateTraining -> loadDataForCreate(params)
+            is UpdateTraining -> loadDataForUpdate(params)
         }
     }
 
-    private fun updateUi() {
+    fun onDateSelected(date: Date) {
+        _uiState.value = _uiState.value.copy(selectedDate = date)
+    }
+
+    fun onSaveButtonClick() {
+        val navEvent = when (val params = args.updateParams) {
+            is CreateTraining -> BackWithResult(
+                requestKey = CREATE_TRAINING_REQUEST_KEY,
+                result = bundleOf(
+                    VISITED_PARTICIPANTS_MODEL_KEY to cameParticipants,
+                    MISSED_PARTICIPANTS_MODEL_KEY to missedParticipants,
+                    DATE_MODEL_KEY to selectedDate
+                )
+            )
+            is UpdateTraining -> BackWithResult(
+                requestKey = UPDATE_TRAINING_REQUEST_KEY,
+                result = bundleOf(
+                    VISITED_PARTICIPANTS_MODEL_KEY to cameParticipants,
+                    MISSED_PARTICIPANTS_MODEL_KEY to missedParticipants,
+                    DATE_MODEL_KEY to selectedDate,
+                    TRAINING_ID_KEY to params.trainingId
+                )
+            )
+        }
+        postNavEvents(navEvent)
+    }
+
+    private fun loadDataForCreate(params: CreateTraining) {
+        _uiState.value = _uiState.value.copy(
+            cameParticipants = emptyList(),
+            missedParticipants = params.participants
+        )
+        updateAdapters()
+    }
+
+    private fun loadDataForUpdate(params: UpdateTraining) {
+        safeLaunch {
+            val visits = withContext(Dispatchers.IO) {
+                trainingRepository.getTrainingVisits(params.trainingId)
+            }
+
+            val missedParticipants = mutableListOf<ParticipantItem>()
+            val visitedParticipants = mutableListOf<ParticipantItem>()
+            visits.forEach {
+                val participantItem = ParticipantItem(
+                    id = it.participant.id,
+                    name = it.participant.name
+                )
+                when (it.isVisited) {
+                    true -> visitedParticipants.add(participantItem)
+                    false -> missedParticipants.add(participantItem)
+                }
+            }
+            _uiState.value = _uiState.value.copy(
+                cameParticipants = visitedParticipants,
+                missedParticipants = missedParticipants,
+                selectedDate = params.date
+            )
+            updateAdapters()
+        }
+    }
+
+    private fun updateAdapters() {
         cameParticipantsAdapter.update(
             _uiState.value.cameParticipants.map {
                 ParticipantListItem(
@@ -118,7 +141,41 @@ class UpdateTrainingViewModel @Inject constructor(
         )
     }
 
-    fun onDateSelected(date: Date) {
-        _uiState.value = _uiState.value.copy(selectedDate = date)
+    private fun moveParticipantFromCameToMissed(participantId: Long) {
+        val participant = cameParticipants.firstOrNull { it.id == participantId } ?: return
+
+        val cameParticipants = cameParticipants.filter {
+            participant.id != it.id
+        }
+        val missedParticipants = missedParticipants.toMutableList().apply {
+            val newItem = ParticipantItem(
+                id = participantId,
+                name = participant.name
+            )
+            add(0, newItem)
+        }
+        _uiState.value = _uiState.value.copy(
+            cameParticipants = cameParticipants,
+            missedParticipants = missedParticipants
+        )
+    }
+
+    private fun moveParticipantFromMissedToCame(participantId: Long) {
+        val participant = missedParticipants.firstOrNull { it.id == participantId } ?: return
+
+        val missedParticipants = missedParticipants.filter {
+            participant.id != it.id
+        }
+        val cameParticipants = cameParticipants.toMutableList().apply {
+            val newItem = ParticipantItem(
+                id = participantId,
+                name = participant.name
+            )
+            add(0, newItem)
+        }
+        _uiState.value = _uiState.value.copy(
+            cameParticipants = cameParticipants,
+            missedParticipants = missedParticipants
+        )
     }
 }

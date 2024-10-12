@@ -7,6 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.trainerview.app.app.AppComponentHolder
@@ -15,22 +18,21 @@ import com.trainerview.app.databinding.FragmentUpdateTrainingBinding
 import com.trainerview.app.date.DateFormatter
 import com.trainerview.app.presentation.update_training.di.DaggerUpdateTrainingComponent
 import com.trainerview.app.presentation.update_training.di.UpdateTrainingComponent
+import kotlinx.coroutines.launch
 import java.util.Calendar
-
+import java.util.Date
 
 class UpdateTrainingFragment : BaseFragment<FragmentUpdateTrainingBinding, UpdateTrainingViewModel>() {
 
     companion object {
         const val CREATE_TRAINING_REQUEST_KEY = "create_training_request_key"
         const val UPDATE_TRAINING_REQUEST_KEY = "update_training_request_key"
+
         const val VISITED_PARTICIPANTS_MODEL_KEY = "visited_participants_model_key"
         const val MISSED_PARTICIPANTS_MODEL_KEY = "missed_participants_model_key"
         const val DATE_MODEL_KEY = "date_model_key"
         const val TRAINING_ID_KEY = "training_id_key"
     }
-
-    private val args: UpdateTrainingFragmentArgs by navArgs()
-
 
     override val viewModel by injectViewModel<UpdateTrainingViewModel>()
 
@@ -47,42 +49,41 @@ class UpdateTrainingFragment : BaseFragment<FragmentUpdateTrainingBinding, Updat
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        with(binding.fragmentUpdateTrainingToolbar) {
-            applySystemInsetsTop()
-            setNavigationOnClickListener { findNavController().popBackStack() }
-        }
-        binding.fragmentUpdateTrainingMissedRv.adapter = viewModel.missedParticipantsAdapter
-        binding.fragmentUpdateTrainingCameRv.adapter = viewModel.cameParticipantsAdapter
-
-        binding.fragmentUpdateTrainingSaveButton.setOnClickListener {
-            val requestKey = when (args.updateParams) {
-                is UpdateTrainingNavParams.CreateTraining -> CREATE_TRAINING_REQUEST_KEY
-                is UpdateTrainingNavParams.UpdateTraining -> UPDATE_TRAINING_REQUEST_KEY
-            }
-            setFragmentResult(
-                requestKey = requestKey,
-                result = bundleOf(
-                    VISITED_PARTICIPANTS_MODEL_KEY to viewModel.uiState.value.cameParticipants,
-                    MISSED_PARTICIPANTS_MODEL_KEY to viewModel.uiState.value.missedParticipants,
-                    DATE_MODEL_KEY to viewModel.uiState.value.selectedDate,
-                    TRAINING_ID_KEY to (args.updateParams as? UpdateTrainingNavParams.UpdateTraining)?.trainingId
-                )
-            )
-            findNavController().popBackStack()
-        }
-        binding.fragmentUpdateTrainingDatePickBtn.setOnClickListener {
-            showDatePicker()
-        }
-
-        binding.fragmentUpdateTrainingDatePickLabel.text = DateFormatter.formatString(
-            (args.updateParams as? UpdateTrainingNavParams.UpdateTraining)?.date ?: viewModel.uiState.value.selectedDate
-
-        )
-
+        initUI()
         viewModel.loadData()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    onDateChanged(state.selectedDate)
+                }
+            }
+        }
     }
 
-    fun showDatePicker() {
+    private fun initUI() {
+        with(binding) {
+            fragmentUpdateTrainingToolbar.applySystemInsetsTop()
+            fragmentUpdateTrainingToolbar.setNavigationOnClickListener {
+                findNavController().popBackStack()
+            }
+            fragmentUpdateTrainingMissedRv.adapter = viewModel.missedParticipantsAdapter
+            fragmentUpdateTrainingCameRv.adapter = viewModel.cameParticipantsAdapter
+            fragmentUpdateTrainingSaveButton.setOnClickListener {
+                viewModel.onSaveButtonClick()
+            }
+
+            fragmentUpdateTrainingDatePickBtn.setOnClickListener {
+                showDatePicker()
+            }
+        }
+    }
+
+    private fun onDateChanged(date: Date) {
+        binding.fragmentUpdateTrainingDatePickLabel.text = DateFormatter.formatString(date)
+    }
+
+    private fun showDatePicker() {
 
         DatePickerDialog(requireContext()).apply {
             val previousDate = Calendar.getInstance().apply {
