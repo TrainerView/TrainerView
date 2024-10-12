@@ -8,9 +8,16 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewbinding.ViewBinding
 import com.trainerview.app.di.ScreenComponent
+import kotlinx.coroutines.launch
+import java.util.logging.Logger
 
 abstract class BaseFragment<T : ViewBinding, VM : BaseViewModel> : Fragment() {
 
@@ -40,6 +47,18 @@ abstract class BaseFragment<T : ViewBinding, VM : BaseViewModel> : Fragment() {
     ): View? {
         _binding = createBinding(inflater, container)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navEvents.collect { navEvent ->
+                    navEvent?.navigate(this@BaseFragment)
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {

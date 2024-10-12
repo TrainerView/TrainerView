@@ -1,12 +1,17 @@
 package com.trainerview.app.base
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavArgs
 import androidx.navigation.NavArgsLazy
 import com.trainerview.app.di.ArgumentsHandler
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,13 +21,22 @@ abstract class BaseViewModel : ViewModel() {
     @PublishedApi
     internal lateinit var argumentsHandler: ArgumentsHandler
 
+    private val _navEvents = MutableSharedFlow<NavEvent?>()
+    val navEvents: SharedFlow<NavEvent?> = _navEvents
+
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
         throwable.printStackTrace()
     }
 
-    fun CoroutineScope.safeLaunch(launchBody: suspend () -> Unit): Job {
-        return launch(coroutineExceptionHandler) {
-            launchBody.invoke()
+    fun safeLaunch(launchBody: suspend (CoroutineScope) -> Unit): Job {
+        return viewModelScope.launch(coroutineExceptionHandler) {
+            launchBody.invoke(this)
+        }
+    }
+
+    protected fun postNavEvents(vararg events: NavEvent) {
+        viewModelScope.launch {
+            events.forEach { _navEvents.emit(it) }
         }
     }
 

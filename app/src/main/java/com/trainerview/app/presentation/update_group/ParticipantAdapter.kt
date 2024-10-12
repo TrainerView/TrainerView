@@ -7,13 +7,15 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.trainerview.app.R
 import com.trainerview.app.databinding.LiParticipantBinding
-import com.trainerview.app.presentation.group_list.GroupListItem
+
+typealias ClickAction = (ParticipantListItem) -> Unit
 
 class ParticipantAdapter : RecyclerView.Adapter<ParticipantViewHolder>() {
 
     private var items: List<ParticipantListItem> = emptyList()
 
-    var onItemLongClickListener: ((ParticipantListItem) -> Unit)? = null
+    var onItemClickListener: ClickAction? = null
+    var onItemLongClickListener: ClickAction? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ParticipantViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -26,7 +28,11 @@ class ParticipantAdapter : RecyclerView.Adapter<ParticipantViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ParticipantViewHolder, position: Int) {
-        holder.bind(items[position], onItemLongClickListener!!)
+        holder.bind(
+            item = items[position],
+            onItemClickListener = onItemClickListener,
+            onItemLongClickListener = onItemLongClickListener
+        )
     }
 
     fun update(newGroups: List<ParticipantListItem>) {
@@ -40,13 +46,20 @@ class ParticipantViewHolder(
     private val binding: LiParticipantBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(group: ParticipantListItem, onItemLongClickListener: (ParticipantListItem) -> Unit) {
-        binding.liParticipantTitle.text = group.name
+    fun bind(
+        item: ParticipantListItem,
+        onItemClickListener: ClickAction?,
+        onItemLongClickListener: ClickAction?
+    ) {
+        binding.liParticipantTitle.text = item.name
         binding.root.setOnLongClickListener {
-            onItemLongClickListener.invoke(group)
+            onItemLongClickListener?.invoke(item)
             true
         }
-        binding.root.background = when (group.isSelected) {
+        binding.root.setOnClickListener {
+            onItemClickListener?.invoke(item)
+        }
+        binding.root.background = when (item.isSelected) {
             true -> ColorDrawable(ContextCompat.getColor(binding.root.context, R.color.grey))
             false -> ColorDrawable(ContextCompat.getColor(binding.root.context, R.color.white))
         }

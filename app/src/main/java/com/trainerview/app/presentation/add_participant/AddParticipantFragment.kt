@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.trainerview.app.R
@@ -18,6 +19,7 @@ import com.trainerview.app.di.ScreenComponent
 import com.trainerview.app.presentation.add_participant.di.AddParticipantComponent
 import com.trainerview.app.presentation.add_participant.di.DaggerAddParticipantComponent
 import com.trainerview.app.presentation.update_group.UpdateGroupFragmentArgs
+import kotlinx.coroutines.launch
 
 class AddParticipantFragment : BaseFragment<FragmentAddParticipantBinding, AddParticipantViewModel>() {
 

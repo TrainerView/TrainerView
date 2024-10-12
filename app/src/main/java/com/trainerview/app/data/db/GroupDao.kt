@@ -12,6 +12,9 @@ interface GroupDao {
     @Query("SELECT * FROM group_table")
     suspend fun getAllGroups(): List<GroupDb>
 
+    @Query("SELECT * FROM group_table WHERE group_id = :groupId")
+    suspend fun getGroup(groupId: Long): GroupDb
+
     @Insert
     suspend fun insertGroup(group: GroupDb): Long
 

@@ -16,6 +16,10 @@ class GroupRepositoryImpl @Inject constructor(
         return groupDao.getAllGroups()
     }
 
+    override suspend fun getGroup(groupId: Long): GroupDb {
+        return groupDao.getGroup(groupId)
+    }
+
     override suspend fun insertGroup(group: GroupDb): Long {
         return groupDao.insertGroup(group)
     }

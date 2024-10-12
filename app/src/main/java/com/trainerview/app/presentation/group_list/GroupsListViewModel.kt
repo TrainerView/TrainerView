@@ -2,12 +2,12 @@ package com.trainerview.app.presentation.group_list
 
 import androidx.lifecycle.viewModelScope
 import com.trainerview.app.base.BaseViewModel
-import com.trainerview.app.data.db.model.GroupDb
+import com.trainerview.app.base.NavigateTo
 import com.trainerview.app.domain.GroupRepository
+import com.trainerview.app.presentation.update_group.UpdateGroupType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -20,7 +20,14 @@ class GroupsListViewModel @Inject constructor(
 
     val adapter = GroupAdapter()
 
-    private val clickListener = { selectedGroup : GroupListItem ->
+    private val onItemClickListener = { selectedGroup : GroupListItem ->
+        postNavEvents(
+            NavigateTo(
+                GroupsListFragmentDirections.actionToGroupDetailsFragment(selectedGroup.id)
+            )
+        )
+    }
+    private val onItemLongClickListener = { selectedGroup : GroupListItem ->
         _uiState.value = _uiState.value.copy(
             groups = _uiState.value.groups.map {
                 val isSelected = it.name == selectedGroup.name
@@ -32,7 +39,8 @@ class GroupsListViewModel @Inject constructor(
     }
 
     init {
-        adapter.onItemLongClickListener = clickListener
+        adapter.onItemClickListener = onItemClickListener
+        adapter.onItemLongClickListener = onItemLongClickListener
     }
 
 
@@ -47,7 +55,7 @@ class GroupsListViewModel @Inject constructor(
     }
 
     fun deleteSelectedGroup() {
-        viewModelScope.safeLaunch {
+        safeLaunch {
             _uiState.value.selectedGroupId?.let {
                 val groupsDb = withContext(Dispatchers.IO) {
                     repository.deleteGroup(it)
@@ -63,7 +71,7 @@ class GroupsListViewModel @Inject constructor(
     }
 
     fun load() {
-        viewModelScope.safeLaunch {
+        safeLaunch {
             val groupsDb = withContext(Dispatchers.IO) { repository.getGroups() }
 
             _uiState.value = _uiState.value.copy(

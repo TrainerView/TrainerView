@@ -14,6 +14,10 @@
             android:id="@+id/action_to_addGroupFragment"
             app:destination="@id/updateGroupFragment" >
         </action>
+
+        <action
+            android:id="@+id/action_to_groupDetailsFragment"
+            app:destination="@id/groupDetailsFragment" />
     </fragment>
 
     <fragment
@@ -42,6 +46,32 @@
             android:name="updateMode"
             app:argType="com.trainerview.app.presentation.add_participant.UpdateParticipantType"/>
 
+    </fragment>
+
+    <fragment
+        android:id="@+id/groupDetailsFragment"
+        android:name="com.trainerview.app.presentation.group_details.GroupDetailsFragment"
+        android:label="fragment_group_details"
+        tools:layout="@layout/fragment_group_details" >
+
+        <argument
+            android:name="groupId"
+            app:argType="long"/>
+
+        <action
+            android:id="@+id/action_to_updateTrainingFragment"
+            app:destination="@id/updateTrainingFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/updateTrainingFragment"
+        android:name="com.trainerview.app.presentation.update_training.UpdateTrainingFragment"
+        android:label="fragment_update_training"
+        tools:layout="@layout/fragment_update_training" >
+
+        <argument
+            android:name="updateParams"
+            app:argType="com.trainerview.app.presentation.update_training.UpdateTrainingNavParams"/>
     </fragment>
 
 </navigation>

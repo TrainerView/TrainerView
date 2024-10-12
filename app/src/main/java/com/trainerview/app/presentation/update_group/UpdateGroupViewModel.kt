@@ -75,7 +75,7 @@ class UpdateGroupViewModel @Inject constructor(
     }
 
     fun load(groupId: Long) {
-        viewModelScope.safeLaunch {
+        safeLaunch {
             val participantsDb = withContext(Dispatchers.IO) {
                 participantRepository.getParticipants(groupId.toLong())
             }
@@ -112,7 +112,7 @@ class UpdateGroupViewModel @Inject constructor(
     }
 
     fun onDeleteButtonClick() {
-        viewModelScope.safeLaunch {
+        safeLaunch {
             _uiState.value.selectedParticipantId?.let { selectedParticipantId ->
                 val participantsCopy = uiState.value.participants.filter {
                     it.id != selectedParticipantId
