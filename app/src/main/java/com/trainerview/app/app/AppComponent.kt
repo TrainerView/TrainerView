@@ -1,11 +1,11 @@
 package com.trainerview.app.app
 
 import android.app.Application
-import com.trainerview.app.data.db.RoomDB
-import com.trainerview.app.data.db.RoomDBModule
-import com.trainerview.app.di.ComponentHolderMode
-import com.trainerview.app.di.DIComponent
-import com.trainerview.app.di.DataBasedComponentHolder
+import com.trainerview.app.base.db.RoomDB
+import com.trainerview.app.base.db.RoomDBModule
+import com.trainerview.app.base.di.ComponentHolderMode
+import com.trainerview.app.base.di.DIComponent
+import com.trainerview.app.base.di.DataBasedComponentHolder
 import dagger.BindsInstance
 import dagger.Component
 
