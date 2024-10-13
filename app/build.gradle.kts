@@ -66,4 +66,10 @@ dependencies {
 
     implementation("com.google.android.material:material:1.11.0")
 //    implementation("com.google.android.material:material:1.13.0")
+
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.0")
+
+    androidTestImplementation("com.kaspersky.android-components:kaspresso:1.5.4")
+    androidTestImplementation("com.kaspersky.android-components:kaspresso-allure-support:1.5.4")
+    androidTestImplementation("com.kaspersky.android-components:kaspresso-compose-support:1.5.4")
 }
