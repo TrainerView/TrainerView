@@ -13,7 +13,7 @@ class SimpleActivityTest : TestCase() {
     @Test
     fun test() {
         MainScreen {
-            createGroupBtn.isVisible()
+            createGroupBtn.isGone()
         }
     }
 }
