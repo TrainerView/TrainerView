@@ -14,7 +14,7 @@ class SimpleActivityTest : TestCase() {
     fun test() {
 //
         MainScreen {
-            createGroupBtn.isVisible()
+            createGroupBtn.isGone()
         }
     }
 }
