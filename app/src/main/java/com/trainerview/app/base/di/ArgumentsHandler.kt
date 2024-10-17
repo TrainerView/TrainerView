@@ -13,6 +13,7 @@ class ArgumentsHandler @Inject constructor() {
 
     @VisibleForTesting
     fun setArgs(args: Bundle?) {
+        val c = 2
         arguments = args
     }
 }
