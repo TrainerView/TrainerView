@@ -17,7 +17,7 @@ class GroupListScreenTest : BaseTestCase() {
             Assert.assertEquals(1, groupsRV.getSize())
             groupsRV {
                 childAt<GroupListScreen.GroupItem>(0) {
-                    title.hasText("group1")
+                    title.hasText("grouwp1")
                 }
             }
         }
