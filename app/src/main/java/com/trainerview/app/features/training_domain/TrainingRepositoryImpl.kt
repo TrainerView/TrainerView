@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class TrainingRepositoryImpl @Inject constructor(
     private val roomDb: RoomDB,
-): TrainingRepository {
+) : TrainingRepository {
 
     private val trainingDao: TrainingDao
         get() = roomDb.trainingDao()

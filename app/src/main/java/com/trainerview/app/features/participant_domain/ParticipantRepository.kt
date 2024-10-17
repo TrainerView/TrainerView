@@ -4,7 +4,7 @@ import com.trainerview.app.features.participant_domain.data.model.ParticipantDb
 
 interface ParticipantRepository {
 
-    suspend fun getParticipants(groupId: Long) : List<ParticipantDb>
+    suspend fun getParticipants(groupId: Long): List<ParticipantDb>
 
     suspend fun insertParticipant(participant: ParticipantDb)
 

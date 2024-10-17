@@ -37,7 +37,7 @@ class UpdateGroupViewModel @Inject constructor(
 
     val adapter = ParticipantAdapter()
 
-    private val clickListener = { selectedParticipant : ParticipantListItem ->
+    private val clickListener = { selectedParticipant: ParticipantListItem ->
         _uiState.value = _uiState.value.copy(
             participants = _uiState.value.participants.map {
                 val isSelected = it.name == selectedParticipant.name

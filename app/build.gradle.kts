@@ -4,6 +4,8 @@ plugins {
     id("kotlin-kapt")
     id("androidx.navigation.safeargs")
     id("kotlin-parcelize")
+
+    id("io.gitlab.arturbosch.detekt").version("1.23.3")
 }
 
 android {
@@ -73,4 +75,6 @@ dependencies {
     androidTestImplementation("com.kaspersky.android-components:kaspresso:1.5.4")
     androidTestImplementation("com.kaspersky.android-components:kaspresso-allure-support:1.5.4")
     androidTestImplementation("com.kaspersky.android-components:kaspresso-compose-support:1.5.4")
+
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.3")
 }

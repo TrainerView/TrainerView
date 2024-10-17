@@ -41,7 +41,6 @@ class ParticipantAdapter : RecyclerView.Adapter<ParticipantViewHolder>() {
     }
 }
 
-
 class ParticipantViewHolder(
     private val binding: LiParticipantBinding,
     private val onItemClickListener: ClickAction?,

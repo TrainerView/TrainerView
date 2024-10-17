@@ -7,9 +7,7 @@ import com.trainerview.app.features.update_participant_screen.UpdateParticipantF
 import com.trainerview.app.features.update_participant_screen.UpdateParticipantFragment.Companion.ADD_PARTICIPANT_REQUEST_KEY
 import javax.inject.Inject
 
-class UpdateParticipantViewModel @Inject constructor(
-
-) : BaseViewModel() {
+class UpdateParticipantViewModel @Inject constructor() : BaseViewModel() {
 
     private val args by navArgs<UpdateParticipantFragmentArgs>()
 

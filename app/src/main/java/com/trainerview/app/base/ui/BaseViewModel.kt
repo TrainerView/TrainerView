@@ -39,7 +39,6 @@ abstract class BaseViewModel : ViewModel() {
     }
 
     inline fun <reified Args : NavArgs> navArgs() = NavArgsLazy(Args::class) {
-        argumentsHandler.arguments
-            ?: throw IllegalStateException("Fragment $this has null arguments")
+        argumentsHandler.arguments ?: error("Fragment $this has null arguments")
     }
 }

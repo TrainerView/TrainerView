@@ -5,7 +5,6 @@ import com.trainerview.app.base.ui.NavigateTo
 import com.trainerview.app.features.training_domain.data.model.TrainingDb
 import com.trainerview.app.features.training_domain.data.model.TrainingVisitDb
 import com.trainerview.app.utils.DateFormatter
-import com.trainerview.app.features.group_domain.GroupRepository
 import com.trainerview.app.features.participant_domain.ParticipantRepository
 import com.trainerview.app.features.training_domain.TrainingRepository
 import com.trainerview.app.features.update_training_screen.ParticipantItem
@@ -16,7 +15,6 @@ import java.util.Date
 import javax.inject.Inject
 
 class GroupDetailsViewModel @Inject constructor(
-    private val groupRepository: GroupRepository,
     private val participantRepository: ParticipantRepository,
     private val trainingRepository: TrainingRepository
 ) : BaseViewModel() {

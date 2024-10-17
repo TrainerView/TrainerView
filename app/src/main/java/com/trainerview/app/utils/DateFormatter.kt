@@ -8,7 +8,7 @@ object DateFormatter {
 //    private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy")
 
-    fun formatString(date: Date) : String {
+    fun formatString(date: Date): String {
         return dateFormat.format(date)
     }
 

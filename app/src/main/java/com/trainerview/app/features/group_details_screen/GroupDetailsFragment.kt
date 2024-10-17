@@ -41,8 +41,12 @@ class GroupDetailsFragment : BaseFragment<FragmentGroupDetailsBinding, GroupDeta
 
     private fun subscribeFragmentResult() {
         setFragmentResultListener(UpdateTrainingFragment.CREATE_TRAINING_REQUEST_KEY) { key, bundle ->
-            val cameParticipants =  bundle.getParcelableArrayList<ParticipantItem>(UpdateTrainingFragment.VISITED_PARTICIPANTS_MODEL_KEY)
-            val missedParticipants =  bundle.getParcelableArrayList<ParticipantItem>(UpdateTrainingFragment.MISSED_PARTICIPANTS_MODEL_KEY)
+            val cameParticipants = bundle.getParcelableArrayList<ParticipantItem>(
+                UpdateTrainingFragment.VISITED_PARTICIPANTS_MODEL_KEY
+            )
+            val missedParticipants = bundle.getParcelableArrayList<ParticipantItem>(
+                UpdateTrainingFragment.MISSED_PARTICIPANTS_MODEL_KEY
+            )
             val date = bundle.getSerializable(UpdateTrainingFragment.DATE_MODEL_KEY, Date::class.java)!!
             viewModel.createTraining(
                 date = date,
@@ -52,8 +56,12 @@ class GroupDetailsFragment : BaseFragment<FragmentGroupDetailsBinding, GroupDeta
         }
 
         setFragmentResultListener(UpdateTrainingFragment.UPDATE_TRAINING_REQUEST_KEY) { key, bundle ->
-            val cameParticipants =  bundle.getParcelableArrayList<ParticipantItem>(UpdateTrainingFragment.VISITED_PARTICIPANTS_MODEL_KEY)
-            val missedParticipants =  bundle.getParcelableArrayList<ParticipantItem>(UpdateTrainingFragment.MISSED_PARTICIPANTS_MODEL_KEY)
+            val cameParticipants = bundle.getParcelableArrayList<ParticipantItem>(
+                UpdateTrainingFragment.VISITED_PARTICIPANTS_MODEL_KEY
+            )
+            val missedParticipants = bundle.getParcelableArrayList<ParticipantItem>(
+                UpdateTrainingFragment.MISSED_PARTICIPANTS_MODEL_KEY
+            )
             val trainingId = bundle.getLong(UpdateTrainingFragment.TRAINING_ID_KEY)
             val date = bundle.getSerializable(UpdateTrainingFragment.DATE_MODEL_KEY, Date::class.java)!!
             viewModel.updateTrainingVisits(
@@ -74,5 +82,3 @@ class GroupDetailsFragment : BaseFragment<FragmentGroupDetailsBinding, GroupDeta
         }
     }
 }
-
-

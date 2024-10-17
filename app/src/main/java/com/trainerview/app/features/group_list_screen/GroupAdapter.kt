@@ -45,7 +45,7 @@ class GroupViewHolder(
     private val onItemLongClickListener: ((GroupListItem) -> Unit)?
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(group: GroupListItem, ) {
+    fun bind(group: GroupListItem) {
         binding.title.text = group.name
         binding.root.setOnLongClickListener {
             onItemLongClickListener?.invoke(group)

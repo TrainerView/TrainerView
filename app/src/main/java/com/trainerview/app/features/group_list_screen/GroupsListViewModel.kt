@@ -22,14 +22,14 @@ class GroupsListViewModel @Inject constructor(
 
     val adapter = GroupAdapter()
 
-    private val onItemClickListener = { selectedGroup : GroupListItem ->
+    private val onItemClickListener = { selectedGroup: GroupListItem ->
         postNavEvents(
             NavigateTo(
                 GroupsListFragmentDirections.actionToGroupDetailsFragment(selectedGroup.id)
             )
         )
     }
-    private val onItemLongClickListener = { selectedGroup : GroupListItem ->
+    private val onItemLongClickListener = { selectedGroup: GroupListItem ->
         _uiState.value = _uiState.value.copy(
             groups = _uiState.value.groups.map {
                 val isSelected = it.name == selectedGroup.name
@@ -44,7 +44,6 @@ class GroupsListViewModel @Inject constructor(
         adapter.onItemClickListener = onItemClickListener
         adapter.onItemLongClickListener = onItemLongClickListener
     }
-
 
     fun clearGroupSelection() {
         _uiState.value = _uiState.value.copy(

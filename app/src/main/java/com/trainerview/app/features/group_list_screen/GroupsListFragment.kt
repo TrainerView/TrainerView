@@ -38,7 +38,6 @@ class GroupsListFragment : BaseFragment<FragmentGroupListBinding, GroupsListView
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
                     updateToolbar(showButtons = uiState.selectedGroupId != null)
-
                 }
             }
         }
@@ -53,7 +52,7 @@ class GroupsListFragment : BaseFragment<FragmentGroupListBinding, GroupsListView
             }
             createGroupBtn.setOnClickListener { viewModel.onCreateGroupClick() }
             deleteGroupButton.setOnClickListener { viewModel.onDeleteSelectedGroupClick() }
-            editGroupButton.setOnClickListener {viewModel.onEditSelectedGroupClick() }
+            editGroupButton.setOnClickListener { viewModel.onEditSelectedGroupClick() }
         }
     }
 

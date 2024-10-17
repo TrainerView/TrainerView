@@ -93,7 +93,6 @@ class UpdateGroupFragment : BaseFragment<FragmentUpdateGroupBinding, UpdateGroup
                     nameInput.setText(params.groupName, TextView.BufferType.EDITABLE)
                 }
             }
-
         }
     }
 

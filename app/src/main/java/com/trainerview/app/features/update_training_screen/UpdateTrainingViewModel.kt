@@ -38,7 +38,6 @@ class UpdateTrainingViewModel @Inject constructor(
 
     val uiState: StateFlow<UpdateTrainingScreenState> = _uiState
 
-
     val cameParticipantsAdapter = ParticipantAdapter()
     val missedParticipantsAdapter = ParticipantAdapter()
 

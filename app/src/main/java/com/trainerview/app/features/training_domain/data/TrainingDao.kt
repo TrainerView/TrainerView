@@ -25,6 +25,7 @@ interface TrainingDao {
     @Query("SELECT * FROM training_table WHERE group_id = :groupId")
     suspend fun getTrainings(groupId: Long): List<TrainingDb>
 
+    @Suppress("Indentation")
     @Query(
         "SELECT visit.is_visited, participant.participant_id, participant.group_id, participant.name " +
                 "FROM training_visit_table as visit, participant_table as participant " +

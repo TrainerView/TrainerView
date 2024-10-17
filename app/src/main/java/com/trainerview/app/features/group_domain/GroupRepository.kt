@@ -4,9 +4,9 @@ import com.trainerview.app.features.group_domain.data.model.GroupDb
 
 interface GroupRepository {
 
-    suspend fun getGroups() : List<GroupDb>
+    suspend fun getGroups(): List<GroupDb>
 
-    suspend fun getGroup(groupId: Long) : GroupDb
+    suspend fun getGroup(groupId: Long): GroupDb
 
     suspend fun insertGroup(group: GroupDb): Long
 

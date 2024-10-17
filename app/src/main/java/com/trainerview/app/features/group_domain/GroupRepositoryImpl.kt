@@ -12,7 +12,7 @@ class GroupRepositoryImpl @Inject constructor(
     private val groupDao: GroupDao
         get() = roomDB.groupDao()
 
-    override suspend fun getGroups() : List<GroupDb> {
+    override suspend fun getGroups(): List<GroupDb> {
         return groupDao.getAllGroups()
     }
 
