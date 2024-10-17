@@ -10,6 +10,8 @@ class ViewModelFactory @Inject constructor(
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val provider = viewModelProviders[modelClass]
+
+
         requireNotNull(provider) { "Unknown ViewModel class: ${modelClass.name}" }
         return provider.get() as T
     }
