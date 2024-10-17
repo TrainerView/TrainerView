@@ -1,24 +1,15 @@
-name: Check build
+name: UI Tests
 
 on:
   pull_request:
     branches: [main]
 
 jobs:
-  check build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
         uses: actions/checkout@v4
-
-      - uses: actions/setup-java@v1
-        with: { java-version: 1.17 }
-
-      - name: Run detekt
-        run: ./gradlew detekt
-
-      - name: Run check out script
-        run: ./gradlew build
 
       - name: Enable KVM
         run: |
